@@ -1,11 +1,11 @@
 ---
 #  - hosts: test-kitchen
-  - hosts: ubuntu20
+  - hosts: myhost
     remote_user: root
     become: yes
     vars:
       conftext: |
-        <VirtualHost *:443>
+        <VirtualHost *:80>
          DocumentRoot "/var/www/helloworld"
           <Directory "/var/www/helloworld">
             allow from all
@@ -41,8 +41,11 @@
 
     - name: Deploy the Hello World website
       copy: 
-        content: "Hello, world!" 
+        src: ./index.html
         dest: /var/www/helloworld/index.html
+        owner: root
+        group: root
+        mode: 0644
         force: yes
 
     - name: Deactivate the default virtualhost
