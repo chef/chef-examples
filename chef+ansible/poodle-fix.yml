@@ -1,0 +1,24 @@
+---
+  - hosts: myhost
+    remote_user: root
+    become: yes
+
+    tasks: 
+    - name: Fix SSL in Apache 
+      replace: dest=/etc/apache2/mods-available/ssl.conf 
+        regexp='^\tSSLProtocol.*$' 
+        replace='\tSSLProtocol -all +TLSv1.2' 
+      notify: 
+        - Restart apache
+        - Restart sshd
+      
+    handlers:
+      - name: Restart apache
+        ansible.builtin.service:
+          name: apache2
+          state: restarted
+
+      - name: Restart sshd
+        ansible.builtin.service:
+          name: sshd
+          state: restarted
