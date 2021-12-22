@@ -81,8 +81,6 @@
 
     - name: Activate SSL on Apache
       command: a2enmod ssl 
-      notify:
-        - Restart apache
         
     - name: Activate the virtualhost
       command: a2ensite helloworld 
@@ -94,3 +92,4 @@
       ansible.builtin.service:
         name: apache2
         state: restarted
+        

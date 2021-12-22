@@ -8,17 +8,10 @@
       replace: dest=/etc/apache2/mods-available/ssl.conf 
         regexp='^\tSSLProtocol.*$' 
         replace='\tSSLProtocol -all +TLSv1.2' 
-      notify: 
-        - Restart apache
-        - Restart sshd
+      notify: Restart apache
       
     handlers:
-      - name: Restart apache
-        ansible.builtin.service:
-          name: apache2
-          state: restarted
-
-      - name: Restart sshd
-        ansible.builtin.service:
-          name: sshd
-          state: restarted
+    - name: Restart apache
+      ansible.builtin.service:
+        name: apache2
+        state: restarted
