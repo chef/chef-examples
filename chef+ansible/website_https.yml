@@ -1,0 +1,91 @@
+- hosts: myhost 
+  remote_user: root
+  become: yes
+  vars:
+      conftext: |
+        <VirtualHost *:443>
+         DocumentRoot "/var/www/helloworld"
+         SSLEngine on
+         SSLCertificateFile /etc/apache2/certs/apache.crt
+         SSLCertificateKeyFile /etc/apache2/certs/apache.key
+          <Directory "/var/www/helloworld">
+            allow from all
+            Options None
+            Require all granted
+          </Directory>
+        </VirtualHost>
+
+  tasks: 
+    - name: Update apt cache 
+      apt: update_cache=true
+    - name: Install necessary packages 
+      apt: 
+        name: apache2=2.4.41-4ubuntu3.8
+
+    - name: Install curl, openssl, PyOpenSSL
+      apt:
+        pkg:
+        - curl
+        - openssl
+        - python3-openssl
+
+    - name: Create a directory for certs
+      file: 
+        path: /etc/apache2/certs
+        state: directory
+        mode: 0640
+
+    - name: Generate an openssl key
+      openssl_privatekey:
+        path: /etc/apache2/certs/apache.key
+
+    - name: Generate an openssl csr
+      openssl_csr:
+        path: /etc/apache2/certs/apache.csr
+        privatekey_path: /etc/apache2/certs/apache.key
+        common_name: myhost
+
+    - name: Generate a self-signed openssl certificate
+      openssl_certificate:
+        path: /etc/apache2/certs/apache.crt
+        privatekey_path: /etc/apache2/certs/apache.key
+        csr_path: /etc/apache2/certs/apache.csr
+        provider: selfsigned
+    - name: Configure Hello World virtual host 
+      copy: 
+        content: "{{ conftext }}"
+        dest: /etc/apache2/sites-available/helloworld.conf
+        mode: 0640
+        force: yes
+
+    - name: Create the helloworld directory 
+      file: 
+        path: /var/www/helloworld 
+        state: directory 
+        mode: 0755 
+    - name: Deploy the Hello World website 
+      copy: 
+        src: ./index.html
+        dest: /var/www/helloworld/index.html
+        owner: root
+        group: root
+        mode: 0644
+        force: yes
+
+    - name: Deactivate the default virtualhost 
+      command: a2dissite 000-default
+    - name: Activate the virtualhost 
+       command: a2ensite helloworld 
+       notify:
+         - Restart apache 
+
+    - name: Activate SSL on Apache
+      command: a2enmod ssl
+      notify:
+        - Restart sshd
+        - Restart apache
+  handlers: 
+    - name: Restart apache
+      ansible.builtin.service:
+        name: apache2
+        state: restarted
