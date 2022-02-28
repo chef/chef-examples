@@ -20,7 +20,7 @@
       apt: update_cache=true
     - name: Install necessary packages 
       apt: 
-        name: apache2=2.4.41-4ubuntu3.8
+        name: apache2=2.4.41-4ubuntu3.9
 
     - name: Install curl, openssl, PyOpenSSL
       apt:
