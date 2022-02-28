@@ -76,10 +76,11 @@
 
     - name: Deactivate the default virtualhost 
       command: a2dissite 000-default
+      
     - name: Activate the virtualhost 
-       command: a2ensite helloworld 
-       notify:
-         - Restart apache 
+      command: a2ensite helloworld 
+      notify:
+        - Restart apache 
 
     - name: Activate SSL on Apache
       command: a2enmod ssl
