@@ -9,11 +9,11 @@
       notify: 
         - Restart apache2 
         - Restart sshd
-      handlers:
-        - name: Restart apache
-          ansible.builtin.service:
-            name: apache2
-            state: restarted
+  handlers:
+    - name: Restart apache
+      ansible.builtin.service:
+        name: apache2
+        state: restarted
 
     - name: Restart sshd
       ansible.builtin.service:
