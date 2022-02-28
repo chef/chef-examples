@@ -14,7 +14,14 @@
             Require all granted
           </Directory>
         </VirtualHost>
-
+      webtext: |
+       <html>
+         <head><title>Test Site</title>/head>
+         <body>
+          <h1>Hello, world!</h1>
+          <p>The site is up and running</p>
+         </body>
+       </html>
   tasks: 
     - name: Update apt cache 
       apt: update_cache=true
@@ -67,7 +74,7 @@
         
     - name: Deploy the Hello World website 
       copy: 
-        src: ./index.html
+        content: "{{ webtext }}"
         dest: /var/www/helloworld/index.html
         owner: root
         group: root
