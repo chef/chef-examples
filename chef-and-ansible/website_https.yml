@@ -51,6 +51,7 @@
         privatekey_path: /etc/apache2/certs/apache.key
         csr_path: /etc/apache2/certs/apache.csr
         provider: selfsigned
+        
     - name: Configure Hello World virtual host 
       copy: 
         content: "{{ conftext }}"
@@ -63,6 +64,7 @@
         path: /var/www/helloworld 
         state: directory 
         mode: 0755 
+        
     - name: Deploy the Hello World website 
       copy: 
         src: ./index.html
@@ -84,7 +86,13 @@
       notify:
         - Restart sshd
         - Restart apache
+        
   handlers: 
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+        
     - name: Restart apache
       ansible.builtin.service:
         name: apache2
