@@ -2,7 +2,7 @@
 driver: 
   name: vagrant 
 provisioner: 
-  hosts: test-kitchen 
+  hosts: myhost 
   name: ansible_playbook 
   require_ansible_repo: true 
   ansible_verbose: true 
