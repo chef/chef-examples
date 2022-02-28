@@ -1,8 +1,0 @@
-<VirtualHost *:80>
-  DocumentRoot "/var/www/helloworld"
-  <Directory "/var/www/helloworld">
-    allow from all
-    Options None
-    Require all granted
-  </Directory>
-</VirtualHost>

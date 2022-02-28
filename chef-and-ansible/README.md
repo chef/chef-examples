@@ -1,1 +1,0 @@
-## Chef + Ansible Example ##
