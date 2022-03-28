@@ -18,6 +18,6 @@ sudo hostnamectl set-hostname $hostname
 sudo sysctl -w vm.max_map_count=262144
 sudo sysctl -w vm.dirty_expire_centisecs=20000
 curl https://packages.chef.io/files/current/latest/chef-automate-cli/chef- automate_linux_amd64.zip | gunzip - > chef-automate && chmod +x chef-automate
-sudo ./chef-automate deploy --product automate --product infra-server -- accept-terms-and-mlsa=true
+sudo ./chef-automate deploy --product automate --product infra-server --accept-terms-and-mlsa=true
 sudo chef-server-ctl user-create $username $longusername $useremail "${userpassword}" --filename $userfilename
 sudo chef-server-ctl org-create $orgname "${longorgname}" --association_user $username --filename $orgfilename
